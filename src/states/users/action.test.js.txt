@@ -1,0 +1,82 @@
+/* eslint-disable max-len */
+/**
+ * skenario test
+ *
+ * - asyncRegisterUser thunk
+ *  - should dispatch action correctly when data register success
+ *  - should dispatch action and call alert correctly when data register failed
+ */
+import {
+  describe, beforeEach, afterEach, it, vi, expect,
+} from 'vitest';
+import { hideLoading, showLoading } from 'react-redux-loading-bar';
+import api from '../../utils/api';
+import { asyncRegisterUser } from './action';
+
+const fakeUsersResponse = [
+  {
+    id: 'john_doe',
+    name: 'John Doe',
+    email: 'john@example.com',
+    avatar: 'https://generated-image-url.jpg',
+  },
+];
+
+const fakeErrorResponse = new Error('email is already taken');
+
+describe('asyncRegisterUser thunk', () => {
+  beforeEach(() => {
+    api._register = api.register;
+  });
+
+  afterEach(() => {
+    api.register = api._register;
+
+    // delete backup data
+    delete api._register;
+  });
+
+  it('should dispatch action correctly when data register success', async () => {
+    // arrange
+    // stub implementation
+    api.register = () => Promise.resolve(fakeUsersResponse);
+    const fakeUsersPayload = {
+      name: 'John Doe',
+      email: 'john@example.com',
+      password: 'qwerty.123',
+    };
+    // mock dispatch
+    const dispatch = vi.fn();
+
+    // action
+    await asyncRegisterUser(fakeUsersPayload)(dispatch);
+
+    // assert
+    expect(dispatch).toHaveBeenCalledWith(showLoading());
+    expect(dispatch).toHaveBeenCalledWith(hideLoading());
+  });
+
+  it('should dispatch action and call alert correctly when data register failed', async () => {
+    // arrange
+    // stub implementation
+    api.register = () => Promise.reject(fakeErrorResponse);
+    const fakeUsersPayload = {
+      name: 'John Doe',
+      email: 'john@example.com',
+      password: 'qwerty.123',
+    };
+    // mock dispatch
+    const dispatch = vi.fn();
+    // mock alert
+    global.alert = vi.fn(); // Menggunakan global.alert
+
+    // action
+    await asyncRegisterUser(fakeUsersPayload)(dispatch);
+
+    // assert
+    expect(dispatch).toHaveBeenCalledWith(showLoading());
+    expect(dispatch).toHaveBeenCalledWith(hideLoading());
+    expect(global.alert).toHaveBeenCalledWith(fakeErrorResponse.message);
+  });
+
+});

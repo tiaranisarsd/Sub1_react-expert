@@ -48,6 +48,7 @@ function asyncSetAuthUser({ email, password }) {
     } catch (error) {
       const errorMessage = error.message || 'Login failed';
       dispatch(setAuthErrorActionCreator(errorMessage));
+      global.alert(errorMessage);
 
       throw new Error(errorMessage);
     } finally {
