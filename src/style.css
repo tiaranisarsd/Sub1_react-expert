@@ -1,0 +1,36 @@
+* {
+    font-family: 'Montserrat',sans-serif;
+  }
+
+  .text-hover:hover{
+    opacity: 75%;
+}
+
+.bg-blue{
+    background-color: #12175E;
+}
+
+.bg-blue2{
+    background-color: #f2f4f8;
+}
+
+.card:hover{
+    transform: scale(1.01);
+    transition: all 0.2s ease-in-out;
+}
+
+.text-blue{
+    color: #12175E;
+}
+
+input::-ms-reveal {
+  display: none;
+}
+
+input::-webkit-credentials-auto-fill-button {
+  display: none !important;
+  visibility: hidden;
+  pointer-events: none;
+  position: absolute;
+  right: 0;
+}
